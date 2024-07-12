@@ -1,6 +1,6 @@
+/* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react';
-import Alert from '../../components/Alert';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../controllers/user.controllers';
 import { UserContext } from '../../contexts/UserContext';
@@ -17,7 +17,7 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   // Form data states
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
   // Handle Log in
@@ -26,12 +26,12 @@ const Login = () => {
     //console.log(email, password);
 
     try {
-      const loginResponseData = await loginUser(email, password);
+      const loginResponseData = await loginUser(name, password);
       
       if(loginResponseData){
 
         setUser({
-          email, 
+          name, 
           posts: []
         });
 
@@ -41,9 +41,6 @@ const Login = () => {
     } catch (err) {
       setError(err.message);
     }
-    
-    // setEmail("");
-    // setPassword("");
   }
 
   return (
@@ -53,12 +50,12 @@ const Login = () => {
 
         <form onSubmit={handleLogin} className="justify-center items-center h-screen">
 
-            <input type="email" 
-                   placeholder="Email address" 
+            <input type="text" 
+                   placeholder="Name" 
                    className="input" 
                    autoFocus 
-                   value={email} 
-                   onChange={(e) => setEmail(e.target.value)} />
+                   value={name} 
+                   onChange={(e) => setName(e.target.value)} />
 
             <input type="password"
                    placeholder="Password" 
@@ -67,7 +64,6 @@ const Login = () => {
                    onChange={(e) => setPassword(e.target.value)} />
 
             <button type="submit" className="btn">Login</button>
-            {error && <Alert msg={error}/>}
         </form>
 
     </section>

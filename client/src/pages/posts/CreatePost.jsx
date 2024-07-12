@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react';
-import Alert from '../../components/Alert';
-import { PostContext } from '../../Context/PostContext';
 import { useNavigate } from 'react-router-dom';
-import { createPost } from '../../controllers/post.controller';
+import { PostContext } from '../../contexts/PostContext';
 import { UserContext } from '../../contexts/UserContext';
+import { createPost } from '../../controllers/post.controller';
 
 const CreatePost = () => {
 
@@ -51,8 +50,6 @@ const CreatePost = () => {
             <button className='btn' type='submit'>
                 Post
             </button>
-
-            {error && <Alert msg={error}/>}
 
         </form>
     </section>

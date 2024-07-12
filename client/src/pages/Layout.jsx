@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
-import { UserContext } from '../Context/UserContext'
+import { UserContext } from '../contexts/UserContext';
 
 const Layout = () => {
 

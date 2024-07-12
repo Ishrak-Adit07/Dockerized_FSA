@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from 'react';
-import { UserContext } from '../Context/UserContext';
 import { Navigate, Outlet } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
 
 
 const GuestRoutes = () => {
