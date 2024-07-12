@@ -1,124 +1,63 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import { User } from "../models/user.model";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import 'dotenv/config.js';
 
-import dotenv from 'dotenv';
-import { createDocument, deleteDocument, findDocument } from '../database/appwrite.queries';
-dotenv.config();
-
-const encryptPassword = async(password) =>{
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    return hashedPassword;
-}
-
-const createToken = (_id) =>{
-    return jwt.sign({_id}, process.env.SECRET_WEB_KEY, {expiresIn: "10d"});
+const createToken = (_id) => {
+    return jwt.sign({ _id }, process.env.SECRET_WEB_KEY, { expiresIn: "10d" });
 };
 
-const registerUser = async(req, res)=>{
-
-    const {name, password} = req.body;
+const registerUser = async (req, res) => {
+    const { name, password } = req.body;
+    console.log(name);
 
     try {
-
-        if(!name || !password){
-            res.status(404).send({success:false, error: "All fields required"});
+        if (!name || !password) {
+            return res.status(400).send({ error: "All fields are required" });
         }
-    
-        else{
-    
-            const exist = await findDocument(process.env.APPWRITE_USER_COLLECTION_ID, "name", name);
-            if(exist.response.total != 0){
-                res.status(404).send({success:false, error: "Name is already in use"});
-            }
-            else{
-                
-                const hashedPassword = await encryptPassword(password);
-                const userData = {
-                    name,
-                    password: hashedPassword,
-                }
 
-                const registerResponse = await createDocument(process.env.APPWRITE_USER_COLLECTION_ID, userData);
-                if(registerResponse.success){
-                    const webToken = createToken(registerResponse.$id);
-                    res.status(201).send({success:true, name, webToken});
-                }
-                else{
-                    res.status(404).send({success:false, error: "User is not registered, please try again"});
-                }
-
-            }
+        const exist = await User.findOne({ name });
+        if (exist) {
+            return res.status(409).send({ error: "Name is already in use" });
         }
+
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = await User.create({ name, password: hashedPassword });
+
+        const webToken = createToken(user._id);
+
+        return res.status(201).send({ name, webToken });
     } catch (e) {
-        console.log(e);
-        res.status(400).send({success:false, error:e.message});
+        console.error(e);
+        return res.status(500).send({ error: e.message });
     }
-}
+};
 
-const loginUser = async(req, res)=>{
+const loginUser = async (req, res) => {
+    const { name, password } = req.body;
 
-    const {name, password} = req.body;
-
-    if(!name || !password){
-        res.status(404).send({success:false, error: "All fields are required"});
+    if (!name || !password) {
+        return res.status(400).send({ error: "All fields are required" });
     }
 
     try {
-        
-        const user = await findDocument(process.env.APPWRITE_USER_COLLECTION_ID, "name", name);
-        if(user.response.total === 0){
-            res.status(404).send({success:false, error: "No such user found"});
-        }
-        else{
-            const match = await bcrypt.compare(password, user.response.documents[0].password);
-            if(!match){
-                res.status(404).send({success:false, error: "Invalid Credentials"});
-            }
-            else{
-                const webToken = createToken(user.response.documents[0].$id);
-                res.status(201).send({success:true, name, webToken});
-            }
+        const user = await User.findOne({ name });
+        if (!user) {
+            return res.status(404).send({ error: "No such name found" });
         }
 
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            return res.status(401).send({ error: "Invalid credentials" });
+        }
+
+        const webToken = createToken(user._id);
+        return res.status(200).send({ name, webToken });
     } catch (e) {
-        console.log(e);
-        res.status(404).send({success:false, error:e.message});
+        console.error(e);
+        return res.status(500).send({ error: e.message });
     }
+};
 
-}
-
-const deleteUser = async(req, res)=>{
-
-    const {name} = req.body;
-
-    if(!name){
-        res.status(404).send({success:false, error: "Name is required"});
-    }
-
-    try {
-        
-        const user = await findDocument(process.env.APPWRITE_USER_COLLECTION_ID, "name", name);
-        if(user.response.total === 0){
-            res.status(404).send({success:false, error: "No such user found"});
-        }
-        else{
-            const deleteUserResponse = await deleteDocument(process.env.APPWRITE_USER_COLLECTION_ID, user.response.documents[0].$id);
-            if(deleteUserResponse.success){
-                res.status(201).send({success:true, message: "User " + name + " is deleted"});
-            }
-            else{
-                res.status(404).send({success:false, error: "User is not deleted, please try again"});
-            }
-        }
-
-    } catch (e) {
-        console.log(e);
-        res.status(404).send({success:false, error:e.message});
-    }
-
-}
-
-
-export { registerUser, loginUser, deleteUser }
+export { registerUser, loginUser };

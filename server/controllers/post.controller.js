@@ -1,84 +1,49 @@
-import { createDocument, deleteDocument, findDocument, findDocumentByMultipleAttributes, getAllDocuments, updateSingleDocument } from "../database/appwrite.queries";
+import { Post } from "../models/post.model";
 
-const createPost = async(req, res)=> {
-
-    const {name, post} = req.body;
-    console.log(name, post);
-
+const getPosts = async (req, res) => {
     try {
-
-        if(!name || !post){
-            res.status(404).send({success:false, error: "All fields required"});
-        }
-    
-        else{
-    
-            const postData = {
-                name,
-                post
-            }
-            const createPostResponse = await createDocument(process.env.APPWRITE_PRODUCT_COLLECTION_ID, postData);
-            if(createPostResponse.success){
-                const responsePost = createPostResponse.response.documents[0];
-                res.status(201).send({success:true, responsePost});
-            }
-            else{
-                res.status(400).send({success:false, error:"Post is not created, try again later"});
-            }
-    
-        }
-        
+        const posts = await Post.find();
+        res.status(200).send({ posts });
     } catch (e) {
-        console.log(e);
-        res.status(400).send({success:false, error:e.message});
+        console.error(e);
+        res.status(500).send({ error: e.message });
     }
+};
 
-}
-
-const deletePost = async(req, res)=>{
-
-    const {name, post} = req.body;
-
+const createPost = async (req, res) => {
     try {
-
-        if(!name || !post){
-            res.status(404).send({success:false, error: "All fields required"});
+        const { name, post } = req.body;
+        if (!post) {
+            return res.status(400).send({ error: "Post is required" });
         }
-    
-        else{
 
-            const postAttributes = [
-                {
-                    name: "name",
-                    value: name
-                },
-                {
-                    name: "post",
-                    value: post
-                },
-            ];
-    
-            const exist = await findDocumentByMultipleAttributes(process.env.APPWRITE_POST_COLLECTION_ID, postAttributes);
-            if(exist.response.total != 0){
-                const deleteProductResponse = await deleteDocument(process.env.APPWRITE_POST_COLLECTION_ID, exist.response.documents[0].$id);
-                if(deleteProductResponse.success){
-                    res.status(201).send({success:true, message: "Product " + name + " of type " + type + " is deleted"});
-                }
-                else{
-                    res.status(404).send({success:false, message: "Could not delete product, try again later"});
-                }
-            }
-            else{
-                res.status(404).send({success:false, message: "Cannot find this product"});
-            }
-    
-        }
-        
+        const postDetails = {
+            name,
+            post
+        };
+        const newPost = await Post.create(postDetails);
+        res.status(201).send({ newPost });
     } catch (e) {
-        console.log(e);
-        res.status(400).send({success:false, error:e.message});
+        console.error(e);
+        res.status(500).send({ error: e.message });
     }
+};
 
-}
+const deletePost = async (req, res) => {
+    try {
+        const { name, post } = req.body;
 
-export { createPost, deletePost }
+        const existPost = await Post.findOne({ name, post });
+        if (!existPost) {
+            return res.status(404).send({ error: "Post not found" });
+        }
+
+        await Post.findOneAndDelete({ name, post });
+        res.status(200).send({ message: "Post was deleted" });
+    } catch (e) {
+        console.error(e);
+        res.status(500).send({ error: e.message });
+    }
+};
+
+export { getPosts, createPost, deletePost };
