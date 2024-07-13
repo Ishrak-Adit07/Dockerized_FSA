@@ -7,12 +7,15 @@ app.use(express.json());
 import mongoose from 'mongoose'
 import { mongodbURL } from './config';
 
+console.log("Trying to start mongodb");
+
 mongoose
     .connect(mongodbURL, {dbName: "dfsa"})
     .then(() =>{
         console.log("App connected to database");
     })
     .catch((err)=>{
+        console.error("Failed to connect to MongoDB", err);
         console.log(err);
     });
 
