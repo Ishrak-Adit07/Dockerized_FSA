@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { deletePost } from '../../controllers/post.controller';
 import { UserContext } from '../../contexts/UserContext';
 
 const Dashboard = () => {
@@ -31,29 +30,6 @@ const Dashboard = () => {
 
   }, []);
 
-  const handleDeletePost = async(name, post) =>{
-    try {
-
-      const data = await deletePost(name, post);
-      console.log(data.message);
-
-      setTimeout(async()=>{
-        setLoading(true);  
-        
-        location.reload();
-  
-        setLoading(false);
-      }, 1000);
-
-      setDeleteSuccess(true);
-
-      setError(null);
-
-    } catch (err) {
-      setError(err.error);
-      console.log(err);
-    }
-  }
 
   return (
     <section className='card'>

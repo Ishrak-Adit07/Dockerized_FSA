@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
 import { registerUser } from "../../controllers/user.controllers";
+import Alert from "../../messages/Alert";
 
 const Register = () => {
   //UserContext
@@ -24,7 +25,6 @@ const Register = () => {
   //Handle Register
   const handleRegister = async (e) => {
     e.preventDefault();
-    //console.log(formData.email, formData.password, formData.confirmPassword);
 
     try {
       const registerResponseData = await registerUser(
@@ -46,12 +46,6 @@ const Register = () => {
     } catch (e) {
       setError(e.message);
     }
-
-    // setFormData({
-    //   email:"",
-    //   password:"",
-    //   confirmPassword:""
-    // })
   };
 
   return (
@@ -97,6 +91,8 @@ const Register = () => {
           Register
         </button>
       </form>
+
+      {error && <Alert msg={error} />}
     </section>
   );
 };

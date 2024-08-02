@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../controllers/user.controllers";
 import { UserContext } from "../../contexts/UserContext";
+import Alert from "../../messages/Alert";
 
 const Login = () => {
   //UserContext
@@ -70,6 +71,9 @@ const Login = () => {
           Login
         </button>
       </form>
+
+      {error && <Alert msg={error}/>}
+
     </section>
   );
 };
