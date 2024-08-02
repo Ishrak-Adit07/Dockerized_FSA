@@ -35,7 +35,7 @@ const Register = () => {
 
       if (registerResponseData) {
         setUser({
-          email: formData.email,
+          name: formData.name,
           posts: [],
         });
 
@@ -90,9 +90,9 @@ const Register = () => {
         <button type="submit" className="btn">
           Register
         </button>
-      </form>
 
-      {error && <Alert msg={error} />}
+        <div className="my-4">{error && <Alert msg={error} />}</div>
+      </form>
     </section>
   );
 };
