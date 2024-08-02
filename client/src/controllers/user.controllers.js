@@ -1,5 +1,5 @@
-const registerUser = async (email, password, confirmPassword) => {
-  if (!email || !password || !confirmPassword) {
+const registerUser = async (name, password, confirmPassword) => {
+  if (!name || !password || !confirmPassword) {
     throw Error("All fields are required");
   }
 
@@ -13,7 +13,7 @@ const registerUser = async (email, password, confirmPassword) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, password }),
     });
 
     const responseData = await registerResponse.json();
@@ -23,7 +23,7 @@ const registerUser = async (email, password, confirmPassword) => {
     }
 
     localStorage.setItem("webToken", responseData.webToken);
-    localStorage.setItem("email", responseData.email);
+    localStorage.setItem("name", responseData.name);
 
     return responseData;
   } catch (error) {
@@ -32,8 +32,8 @@ const registerUser = async (email, password, confirmPassword) => {
   }
 };
 
-const loginUser = async (email, password) => {
-  if (!email || !password) {
+const loginUser = async (name, password) => {
+  if (!name || !password) {
     throw Error("All fields are required");
   }
 
@@ -43,7 +43,7 @@ const loginUser = async (email, password) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ name, password }),
     });
 
     const responseData = await loginResponse.json();
@@ -53,7 +53,7 @@ const loginUser = async (email, password) => {
     }
 
     localStorage.setItem("webToken", responseData.webToken);
-    localStorage.setItem("email", responseData.email);
+    localStorage.setItem("name", responseData.name);
 
     return responseData;
   } catch (error) {

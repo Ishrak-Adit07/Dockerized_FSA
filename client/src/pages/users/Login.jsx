@@ -14,7 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   // Error state
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
 
   // Form data states
   const [name, setName] = useState("");
@@ -26,6 +26,7 @@ const Login = () => {
     //console.log(email, password);
 
     try {
+      console.log(name, password);
       const loginResponseData = await loginUser(name, password);
 
       if (loginResponseData) {
@@ -35,15 +36,17 @@ const Login = () => {
         });
 
         navigate("/dashboard");
-        setError(null);
+        setError("");
       }
     } catch (err) {
+      console.log("From Login");
       setError(err.message);
+      console.log(error);
     }
   };
 
   return (
-    <section className="card">
+    <div className="card">
       <h1 className="title">Login to your account</h1>
 
       <form
@@ -70,11 +73,10 @@ const Login = () => {
         <button type="submit" className="btn">
           Login
         </button>
+
+        <div className="my-4">{error && <Alert msg={error} />}</div>
       </form>
-
-      {error && <Alert msg={error}/>}
-
-    </section>
+    </div>
   );
 };
 

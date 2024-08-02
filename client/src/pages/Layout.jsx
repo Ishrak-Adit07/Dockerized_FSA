@@ -12,11 +12,11 @@ const Layout = () => {
   const handleLogOut = () => {
     if (confirm("Are you sure you want to log out?")) {
       setUser({
-        email: null,
+        name: null,
         posts: [],
       });
 
-      localStorage.removeItem("email");
+      localStorage.removeItem("name");
       localStorage.removeItem("webToken");
 
       navigate("/");
@@ -33,7 +33,7 @@ const Layout = () => {
             className="fa-solid fa-house-chimney nav-link"
           ></Link>
 
-          {user.email ? (
+          {user.name ? (
             <div className="flex items-center gap-2">
               <Link
                 title="Dashboard"
