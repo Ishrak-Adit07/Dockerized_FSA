@@ -1,18 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required: true
-        },
-        password: {
-            type: String,
-        }
+  {
+    name: {
+      type: String,
+      required: true,
     },
-    {
-        timestamps: true
-    }
+    password: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
-export const User = mongoose.model('User', userSchema);
+export const User = mongoose.model("User", userSchema);

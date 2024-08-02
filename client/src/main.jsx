@@ -1,21 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './assets/app.css'
-import UserProvider from './contexts/UserContext'
-import PostProvider from './contexts/PostContext'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./assets/app.css";
+import UserProvider from "./contexts/UserContext";
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-
-    <PostProvider>
-      
-      <UserProvider>
-        <App />
-      </UserProvider>
-
-    </PostProvider>
-
-  </React.StrictMode>,
-)
+    <UserProvider>
+      <App />
+    </UserProvider>
+  </React.StrictMode>
+);
