@@ -12,17 +12,18 @@ const Home = () => {
 
   return (
     <section className="card">
-      <h1 className="title">Latest Posts</h1>
+      <h1 className="title text-center">Home page</h1>
 
       <div>
         {loading && (
           <i className="fa-solid fa-spinner animate-spin text-3xl text-center-block"></i>
         )}
 
-        {!loading && <h1>Post here</h1>}
+        {!loading && <h1 className="text-center text-2xl text-blue-700">Winter is coming</h1>}
       </div>
     </section>
   );
 };
 
 export default Home;
+ 
