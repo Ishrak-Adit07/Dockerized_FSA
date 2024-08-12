@@ -16,6 +16,10 @@ services:
           action: rebuild
         - path: ./client/package-lock.json
           action: rebuild
+          
+        - path: ./client
+          target: /app
+          action: sync
 
 
 volumes:
