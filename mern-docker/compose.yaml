@@ -16,11 +16,32 @@ services:
           action: rebuild
         - path: ./client/package-lock.json
           action: rebuild
-          
+
         - path: ./client
           target: /app
           action: sync
 
+  api:
+    depends_on:
+      - db
+    build: ./server
+    ports: 
+      - 8000:8000
+    environment:
+      DB_URL: mongodb://db/users
+    
+    develop:
+      watch:
+        - path: ./server/package.json
+          action: rebuild
+        - path: ./server/package-lock.json
+          action: rebuild
+
+        - path: ./server
+          target: /app
+          action: sync
+
+  
 
 volumes:
   anime:
