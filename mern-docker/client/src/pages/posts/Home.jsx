@@ -19,7 +19,7 @@ const Home = () => {
           <i className="fa-solid fa-spinner animate-spin text-3xl text-center-block"></i>
         )}
 
-        {!loading && <h1 className="text-center text-2xl text-red-700">Fire and Blood</h1>}
+        {!loading && <h1 className="text-center text-2xl text-blue-700">Winter is coming</h1>}
       </div>
     </section>
   );
